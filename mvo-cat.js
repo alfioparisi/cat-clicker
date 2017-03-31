@@ -187,6 +187,7 @@ var listView = {
       if (catItems[i].textContent === oldName) {
           // ...update its name
           catItems[i].textContent = newName;
+          // Break out of the loop
           break;
       }
     }
@@ -257,6 +258,11 @@ var adminView = {
       evt.preventDefault();
       that.saveChanges(adEls);
     });
+    // On the delete button
+    adEls.cancel.addEventListener("click", function(evt) {
+      evt.preventDefault();
+      that.deleteChanges(adEls);
+    });
   },
   toAdmin: function() {
     // Turn on admin mode
@@ -275,6 +281,16 @@ var adminView = {
     // Get the inputs
     var inputs = octopus.getInputs();
     octopus.applyChanges(inputs.name.value, inputs.url.value, inputs.number.value);
+    // Reset the inputs
+    inputs.name.value = "";
+    inputs.url.value = "";
+    inputs.number.value = null;
+    // Hide the form
+    adEls.adminForm.style.visibility = "hidden";
+    // Turn off Admin mode
+    octopus.adminMode = false;
+  },
+  deleteChanges: function(adEls) {
     // Hide the form
     adEls.adminForm.style.visibility = "hidden";
     // Turn off Admin mode
