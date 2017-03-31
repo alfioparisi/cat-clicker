@@ -73,3 +73,54 @@ img {
 img:hover {
   box-shadow: 0 0 5px white;
 }
+
+.admin-view {
+  display: flex;
+}
+
+.admin-div {
+  flex: 1;
+}
+
+a {
+  display: block;
+  text-align: center;
+  line-height: 48px;
+  background-color: #d0c9c9;
+  text-decoration: none;
+  margin: 5px auto;
+  border: 1px solid #e8dddd;
+}
+
+a, button {
+  width: 70px;
+  height: 48px;
+}
+
+a:hover, button:hover {
+  background-color: black;
+  color: white;
+}
+
+.btn-container {
+  display: flex;
+}
+
+button {
+  flex: 1;
+}
+
+form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
+}
+
+label {
+  padding-left: 10px;
+}
+
+input {
+  padding: 5px;
+}
