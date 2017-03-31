@@ -107,9 +107,9 @@ var listView = {
       catItem.textContent = this.cats[i].name;
       // Finally append it to the ul
       catList.appendChild(catItem);
-      // Wait for clicks
-      this.onClick();
     }
+    // Wait for clicks
+    this.onClick();
   },
   // Handle clicks
   onClick: function() {
@@ -127,7 +127,7 @@ var listView = {
         }
       }
       // Redraw catView using the updated info
-      catView.init();
+      catView.render();
     });
   }
 };
@@ -140,6 +140,15 @@ var listView = {
 
 var catView = {
   init: function() {
+    // Store the context
+    var that = this;
+    // Take the DOM elements
+    var els = octopus.getEls();
+    // Add event listener to the image
+    els.img.addEventListener("click", function() {
+      that.onClick();
+    });
+    // Render the cats
     this.render();
   },
   render: function() {
@@ -151,18 +160,14 @@ var catView = {
     els.name.textContent = currentCat.name;
     els.img.setAttribute("src", currentCat.img);
     els.count.textContent = "Click number : " + currentCat.count;
-    // Wait for clicks
-    this.onClick();
   },
   onClick: function() {
     // Take the DOM elements
     var els = octopus.getEls();
     // Take the current cat
     var currentCat = octopus.getCurrentCat();
-    els.img.addEventListener("click", function() {
-      currentCat.count++;
-      els.count.textContent = "Click number : " + currentCat.count;
-    });
+    currentCat.count++;
+    els.count.textContent = "Click number : " + currentCat.count;
   }
 };
 
