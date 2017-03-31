@@ -48,6 +48,7 @@ var octopus = {
     model.init();
     listView.init();
     catView.init();
+    adminView.init();
   },
   // Retrieve the cat objects from the model
   // @return {array}
@@ -77,6 +78,51 @@ var octopus = {
     els.img = document.querySelector(".cat-img");
     els.count = document.querySelector(".count");
     return els;
+  },
+  // Set the admin mode to false by default
+  adminMode: false,
+  // Get the admin elements
+  // @return {object}
+  getAdminEls: function() {
+    var adEls = {
+      adminBtn: {},
+      adminForm: {},
+      save: {},
+      cancel: {}
+    };
+    adEls.adminBtn = document.querySelector(".admin-btn");
+    adEls.adminForm = document.querySelector("#admin-form");
+    adEls.save = document.querySelector(".save");
+    adEls.cancel = document.querySelector(".cancel");
+    return adEls;
+  },
+  // Get the inputs elements
+  // @return {object} : DOM nodes
+  getInputs: function() {
+    var inputs = {
+      name: {},
+      url: {},
+      number: {}
+    };
+    inputs.name = document.querySelector(".name");
+    inputs.url = document.querySelector(".url");
+    inputs.number = document.querySelector(".number");
+    return inputs;
+  },
+  // Apply the user changes
+  // @param {string} : cat name
+  // @param {string} : img url
+  // @param {number} : click number
+  applyChanges: function(newName, newURL, newCount) {
+    var oldName = model.currentCat.name;
+    var newName = newName;
+    // Change the model info
+    model.currentCat.name = newName;
+    model.currentCat.img = newURL;
+    model.currentCat.count = newCount;
+    // Show the changes
+    listView.update(oldName, newName);
+    catView.render();
   }
 };
 
@@ -129,6 +175,21 @@ var listView = {
       // Redraw catView using the updated info
       catView.render();
     });
+  },
+  // Update the list after the user changes
+  // @param {string}
+  // @param {string}
+  update: function(oldName, newName) {
+    // Get the li items
+    let catItems = document.getElementsByTagName("li");
+    for (let i = 0, l = catItems.length; i < l; i++) {
+      // Once you find the right cat...
+      if (catItems[i].textContent === oldName) {
+          // ...update its name
+          catItems[i].textContent = newName;
+          break;
+      }
+    }
   }
 };
 
@@ -171,4 +232,55 @@ var catView = {
   }
 };
 
+/*
+*********************************
+                        ADMINVIEW
+*********************************
+*/
+
+var adminView = {
+  init: function() {
+    // Save the context
+    var that = this;
+    // Get the DOM elemnts from the octopus
+    var adEls = octopus.getAdminEls();
+    // Listen for clicks on the admin button
+    adEls.adminBtn.addEventListener("click", function(evt) {
+      // Prevent link behavior
+      evt.preventDefault();
+      // Call admin mode and display the form
+      that.toAdmin();
+      that.displayAdmin(adEls);
+    });
+    // On the save button
+    adEls.save.addEventListener("click", function(evt) {
+      evt.preventDefault();
+      that.saveChanges(adEls);
+    });
+  },
+  toAdmin: function() {
+    // Turn on admin mode
+    octopus.adminMode = true;
+  },
+  // @param {object} : a DOM node
+  displayAdmin: function(adEls) {
+    // Check if we are in admin mode
+    if (octopus.adminMode) {
+      // Display the admin form
+      adEls.adminForm.style.visibility = "visible";
+    }
+  },
+  // Apply user changes
+  saveChanges: function(adEls) {
+    // Get the inputs
+    var inputs = octopus.getInputs();
+    octopus.applyChanges(inputs.name.value, inputs.url.value, inputs.number.value);
+    // Hide the form
+    adEls.adminForm.style.visibility = "hidden";
+    // Turn off Admin mode
+    octopus.adminMode = false;
+  }
+};
+
+// Start
 octopus.init();
